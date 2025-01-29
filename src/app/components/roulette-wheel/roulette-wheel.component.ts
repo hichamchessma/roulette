@@ -139,7 +139,7 @@ export class RouletteWheelComponent {
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(angle + pocketAngle / 2);
-      ctx.translate(this.radius * 0.75, 0);
+      ctx.translate(this.radius * 0.88, 0);
       ctx.rotate(-angle - pocketAngle / 2);
       
       ctx.fillStyle = '#FFFFFF';
@@ -211,7 +211,7 @@ export class RouletteWheelComponent {
     const centerY = this.radius + 20;
     const ballDistance = this.radius * 0.85;
     const x = centerX + ballDistance * Math.cos(this.ballAngle);
-    const y = centerY + ballDistance * Math.sin(this.ballAngle);
+    const y = centerY + ballDistance * Math.sin(this.ballAngle) ;
 
     // Draw ball shadow
     this.ctx.beginPath();
