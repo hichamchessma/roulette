@@ -1,0 +1,33 @@
+<div class="betting-table">
+  <div class="numbers-grid">
+    <div class="zero">
+      <div class="number green" (click)="placeBet(0)">0</div>
+    </div>
+    <div class="main-grid">
+      <ng-container *ngFor="let number of numbers">
+        <div class="number" 
+             [ngClass]="getNumberClass(number)"
+             (click)="placeBet(number)">
+          {{ number }}
+        </div>
+      </ng-container>
+    </div>
+  </div>
+  
+  <div class="betting-options">
+    <div class="section">
+      <div class="bet-option" (click)="placeBet('1-12')">1st 12</div>
+      <div class="bet-option" (click)="placeBet('13-24')">2nd 12</div>
+      <div class="bet-option" (click)="placeBet('25-36')">3rd 12</div>
+    </div>
+    
+    <div class="section">
+      <div class="bet-option" (click)="placeBet('1-18')">1-18</div>
+      <div class="bet-option" (click)="placeBet('even')">EVEN</div>
+      <div class="bet-option red" (click)="placeBet('red')">RED</div>
+      <div class="bet-option black" (click)="placeBet('black')">BLACK</div>
+      <div class="bet-option" (click)="placeBet('odd')">ODD</div>
+      <div class="bet-option" (click)="placeBet('19-36')">19-36</div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,7 @@
+<div class="roulette-container">
+  <canvas #canvas></canvas>
+  <button class="spin-button" (click)="spinWheel()">Tourner la Roulette</button>
+  <div *ngIf="selectedNumber !== null" class="result">
+    Numéro gagnant : {{ selectedNumber }}
+  </div>
+</div>
