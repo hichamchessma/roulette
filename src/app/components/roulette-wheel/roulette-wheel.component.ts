@@ -91,10 +91,10 @@ export class RouletteWheelComponent {
       // Set color based on number
       if (number === 0) {
         ctx.fillStyle = '#008000'; // Green for 0
-      } else if ([1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(number)) {
-        ctx.fillStyle = '#FF0000'; // Red numbers
+      } else if (number % 2 === 0) {
+        ctx.fillStyle = '#FF0000'; // Red for even numbers
       } else {
-        ctx.fillStyle = '#000000'; // Black numbers
+        ctx.fillStyle = '#000000'; // Black for odd numbers
       }
       
       ctx.fill();
