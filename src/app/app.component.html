@@ -1,41 +1,48 @@
-<div class="roulette-container">
-  <div class="winning-number">
-    <h2>Winning Number: <span>{{ winningNumber }}</span></h2>
-  </div>
+<div class="app-container">
+  <div class="board">
+    <div class="roulette-container">
+      <div class="winning-number">
+        <h2>Winning Number: <span>{{ winningNumber }}</span></h2>
+      </div>
 
-  <div class="betting-grid">
-    <!-- Zero section -->
-    <div class="number zero">0</div>
+      <div class="betting-grid">
+        <!-- Zero section -->
+        <div class="number zero">0</div>
 
-    <!-- Main number grid -->
-    <div class="numbers-grid">
-      <div class="number" *ngFor="let num of numbers" [ngClass]="{'red': isRed(num), 'black': !isRed(num)}">
-        {{ num }}
+        <!-- Main number grid -->
+        <div class="numbers-grid">
+          <div class="number" *ngFor="let num of numbers" [ngClass]="{'red': isRed(num), 'black': !isRed(num)}">
+            {{ num }}
+          </div>
+        </div>
+
+        <!-- Column bets -->
+        <div class="column-bets">
+          <div class="bet-box">2 to 1</div>
+          <div class="bet-box">2 to 1</div>
+          <div class="bet-box">2 to 1</div>
+        </div>
+      </div>
+
+      <!-- Dozen bets -->
+      <div class="dozen-bets">
+        <div class="bet-box">1 to 12</div>
+        <div class="bet-box">13 to 24</div>
+        <div class="bet-box">25 to 36</div>
+      </div>
+
+      <!-- Even money bets -->
+      <div class="even-money-bets">
+        <div class="bet-box">1 to 18</div>
+        <div class="bet-box">EVEN</div>
+        <div class="bet-box red">RED</div>
+        <div class="bet-box black">BLACK</div>
+        <div class="bet-box">ODD</div>
+        <div class="bet-box">19 to 36</div>
       </div>
     </div>
-
-    <!-- Column bets -->
-    <div class="column-bets">
-      <div class="bet-box">2 to 1</div>
-      <div class="bet-box">2 to 1</div>
-      <div class="bet-box">2 to 1</div>
-    </div>
   </div>
-
-  <!-- Dozen bets -->
-  <div class="dozen-bets">
-    <div class="bet-box">1 to 12</div>
-    <div class="bet-box">13 to 24</div>
-    <div class="bet-box">25 to 36</div>
-  </div>
-
-  <!-- Even money bets -->
-  <div class="even-money-bets">
-    <div class="bet-box">1 to 18</div>
-    <div class="bet-box">EVEN</div>
-    <div class="bet-box red">RED</div>
-    <div class="bet-box black">BLACK</div>
-    <div class="bet-box">ODD</div>
-    <div class="bet-box">19 to 36</div>
+  <div class="roulette-wheel-container">
+    <app-roulette-wheel></app-roulette-wheel>
   </div>
 </div>

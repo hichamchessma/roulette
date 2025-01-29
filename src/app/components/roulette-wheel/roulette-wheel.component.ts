@@ -10,9 +10,9 @@ export class RouletteWheelComponent {
   @Output() spinComplete = new EventEmitter<number>();
 
   private ctx!: CanvasRenderingContext2D;
-  private radius = 200;
+  private radius = 250; // Increased radius for better detail
   private numbers = [0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26];
-  private ballRadius = 8;
+  private ballRadius = 6;
   private ballAngle = 0;
   private ballSpeed = 0;
   private wheelAngle = 0;
@@ -69,12 +69,28 @@ export class RouletteWheelComponent {
 
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
-    // Draw outer circle
+    // Draw background
+    ctx.fillStyle = '#004400';
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+
+    // Draw outer rim (golden)
     ctx.beginPath();
     ctx.arc(centerX, centerY, this.radius, 0, 2 * Math.PI);
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 2;
+    const gradient = ctx.createLinearGradient(0, centerY - this.radius, 0, centerY + this.radius);
+    gradient.addColorStop(0, '#DAA520');
+    gradient.addColorStop(0.5, '#FFD700');
+    gradient.addColorStop(1, '#DAA520');
+    ctx.fillStyle = gradient;
+    ctx.fill();
+    ctx.strokeStyle = '#B8860B';
+    ctx.lineWidth = 4;
     ctx.stroke();
+
+    // Draw inner wheel (dark brown)
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, this.radius * 0.95, 0, 2 * Math.PI);
+    ctx.fillStyle = '#3D2B1F';
+    ctx.fill();
 
     // Draw pockets
     const pocketAngle = (2 * Math.PI) / this.numbers.length;
@@ -85,22 +101,41 @@ export class RouletteWheelComponent {
       // Draw pocket
       ctx.beginPath();
       ctx.moveTo(centerX, centerY);
-      ctx.arc(centerX, centerY, this.radius, angle, angle + pocketAngle);
+      ctx.arc(centerX, centerY, this.radius * 0.95, angle, angle + pocketAngle);
       ctx.closePath();
       
-      // Set color based on number
+      // Set color based on number with gradient for depth
+      let gradientPocket;
       if (number === 0) {
-        ctx.fillStyle = '#008000'; // Green for 0
+        gradientPocket = ctx.createRadialGradient(
+          centerX, centerY, this.radius * 0.4,
+          centerX, centerY, this.radius * 0.95
+        );
+        gradientPocket.addColorStop(0, '#006400');
+        gradientPocket.addColorStop(1, '#004d00');
       } else if (number % 2 === 0) {
-        ctx.fillStyle = '#FF0000'; // Red for even numbers
+        gradientPocket = ctx.createRadialGradient(
+          centerX, centerY, this.radius * 0.4,
+          centerX, centerY, this.radius * 0.95
+        );
+        gradientPocket.addColorStop(0, '#cc0000');
+        gradientPocket.addColorStop(1, '#990000');
       } else {
-        ctx.fillStyle = '#000000'; // Black for odd numbers
+        gradientPocket = ctx.createRadialGradient(
+          centerX, centerY, this.radius * 0.4,
+          centerX, centerY, this.radius * 0.95
+        );
+        gradientPocket.addColorStop(0, '#1a1a1a');
+        gradientPocket.addColorStop(1, '#000000');
       }
       
+      ctx.fillStyle = gradientPocket;
       ctx.fill();
+      ctx.strokeStyle = '#B8860B';
+      ctx.lineWidth = 1;
       ctx.stroke();
 
-      // Draw numbers
+      // Draw numbers with shadow
       ctx.save();
       ctx.translate(centerX, centerY);
       ctx.rotate(angle + pocketAngle / 2);
@@ -108,13 +143,67 @@ export class RouletteWheelComponent {
       ctx.rotate(-angle - pocketAngle / 2);
       
       ctx.fillStyle = '#FFFFFF';
-      ctx.font = '14px Arial';
+      ctx.font = 'bold 16px Arial';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.5)';
+      ctx.shadowBlur = 3;
+      ctx.shadowOffsetX = 1;
+      ctx.shadowOffsetY = 1;
       ctx.fillText(number.toString(), 0, 0);
       
       ctx.restore();
     }
+
+    // Draw central hub
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, this.radius * 0.15, 0, 2 * Math.PI);
+    const hubGradient = ctx.createRadialGradient(
+      centerX - 5, centerY - 5, 0,
+      centerX, centerY, this.radius * 0.15
+    );
+    hubGradient.addColorStop(0, '#DAA520');
+    hubGradient.addColorStop(1, '#B8860B');
+    ctx.fillStyle = hubGradient;
+    ctx.fill();
+    ctx.strokeStyle = '#8B4513';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+
+    // Draw spinning mechanism (horizontal bar)
+    ctx.beginPath();
+    ctx.moveTo(centerX - this.radius * 0.3, centerY);
+    ctx.lineTo(centerX + this.radius * 0.3, centerY);
+    ctx.strokeStyle = '#DAA520';
+    ctx.lineWidth = 8;
+    ctx.stroke();
+
+    // Draw spheres at the ends of the bar
+    const sphereRadius = 10;
+    const sphereGradient = ctx.createRadialGradient(
+      centerX - this.radius * 0.3 - 2, centerY - 2, 0,
+      centerX - this.radius * 0.3, centerY, sphereRadius
+    );
+    sphereGradient.addColorStop(0, '#FFD700');
+    sphereGradient.addColorStop(1, '#DAA520');
+
+    // Left sphere
+    ctx.beginPath();
+    ctx.arc(centerX - this.radius * 0.3, centerY, sphereRadius, 0, 2 * Math.PI);
+    ctx.fillStyle = sphereGradient;
+    ctx.fill();
+    ctx.strokeStyle = '#B8860B';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // Right sphere
+    ctx.beginPath();
+    ctx.arc(centerX + this.radius * 0.3, centerY, sphereRadius, 0, 2 * Math.PI);
+    ctx.fillStyle = sphereGradient;
+    ctx.fill();
+    ctx.strokeStyle = '#B8860B';
+    ctx.lineWidth = 1;
+    ctx.stroke();
   }
 
   private drawBall() {
@@ -124,13 +213,32 @@ export class RouletteWheelComponent {
     const x = centerX + ballDistance * Math.cos(this.ballAngle);
     const y = centerY + ballDistance * Math.sin(this.ballAngle);
 
+    // Draw ball shadow
+    this.ctx.beginPath();
+    this.ctx.arc(x + 2, y + 2, this.ballRadius, 0, 2 * Math.PI);
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    this.ctx.fill();
+
+    // Draw ball with gradient for 3D effect
     this.ctx.beginPath();
     this.ctx.arc(x, y, this.ballRadius, 0, 2 * Math.PI);
-    this.ctx.fillStyle = '#FFFFFF';
+    const ballGradient = this.ctx.createRadialGradient(
+      x - 2, y - 2, 0,
+      x, y, this.ballRadius
+    );
+    ballGradient.addColorStop(0, '#FFFFFF');
+    ballGradient.addColorStop(1, '#E0E0E0');
+    this.ctx.fillStyle = ballGradient;
     this.ctx.fill();
-    this.ctx.strokeStyle = '#333';
+    this.ctx.strokeStyle = '#CCCCCC';
     this.ctx.lineWidth = 1;
     this.ctx.stroke();
+
+    // Add highlight
+    this.ctx.beginPath();
+    this.ctx.arc(x - 2, y - 2, this.ballRadius * 0.3, 0, 2 * Math.PI);
+    this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    this.ctx.fill();
   }
 
   private selectWinningNumber() {
