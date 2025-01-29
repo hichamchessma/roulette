@@ -6,15 +6,21 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+  isRed(num: number): boolean {
+    return [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36].includes(num);
+  }
+  winningNumber: number | null = null;
   currentBet: any = null;
   balance = 1000; // Solde initial
   betAmount = 10; // Mise par défaut
+  numbers: number[] = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35, 1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34];
 
   onBetPlaced(bet: any) {
     this.currentBet = bet;
   }
 
   onSpinComplete(winningNumber: number) {
+    this.winningNumber = winningNumber;
     if (!this.currentBet) return;
 
     // Vérifier si le pari est gagnant
@@ -31,7 +37,7 @@ export class AppComponent {
       // Pari sur des options
       switch(this.currentBet.value) {
         case 'red':
-          won = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36].includes(winningNumber);
+          won = this.isRed(winningNumber);
           multiplier = 1;
           break;
         case 'black':
